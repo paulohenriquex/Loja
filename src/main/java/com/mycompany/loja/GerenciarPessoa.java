@@ -65,7 +65,7 @@ public class GerenciarPessoa {
         return log;
     }
 
-    public String alterarPessoaFisica(String pos,String cpfCnpj, String nome, String endereco, String telefone,
+    public String alterarPessoaFisica(String buscarCpfCnpj,String cpfCnpj, String nome, String endereco, String telefone,
             LocalDate dataNascimento) {
         String log = "";
         boolean achou = false;
@@ -75,19 +75,15 @@ public class GerenciarPessoa {
         }
 
         for (Pessoa p : pessoas) {
-            System.out.println("Entrou no for");
             if (p instanceof PessoaFisica) {
-                System.out.println("Entrou no if");
                 PessoaFisica pf = (PessoaFisica) p;
-                if(pos.equals(pf.getCpf())){
-
+                if(buscarCpfCnpj.equals(pf.getCpf())){
                     pf.setNome(nome);
                     pf.setEndereco(endereco);
                     pf.setTelefone(telefone);
                     pf.setDataDeNascimento(dataNascimento);
                     pf.setCpf(cpfCnpj);
                     achou = true;
-                    System.out.println("Alterou os dados");
                 }
             }
         }
@@ -98,14 +94,14 @@ public class GerenciarPessoa {
         return log;
     }
 
-    public String alterarPessoaJuridica(String nome, String endereco, String telefone, String cpfCnpj,
+    public String alterarPessoaJuridica(String buscarCpfCnpj,String nome, String endereco, String telefone, String cpfCnpj,
             String razaoSocial) {
         String log = "";
 
         for (Pessoa p : pessoas) {
             if (p instanceof PessoaJuridica) {
                 PessoaJuridica pj = (PessoaJuridica) p;
-                if (cpfCnpj.equals(pj.getCnpj())) {
+                if (buscarCpfCnpj.equals(pj.getCnpj())) {
                     pj.setNome(nome);
                     pj.setEndereco(endereco);
                     pj.setTelefone(telefone);

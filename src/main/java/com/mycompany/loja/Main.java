@@ -6,22 +6,23 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Pessoa pessoa = null;
         ArrayList<Pessoa> pessoas = new ArrayList<>();
         ArrayList<Produto> produtos = new ArrayList<>();
         ArrayList<Pedido> pedidos = new ArrayList<>();
         ArrayList<Pagamento> pagamentos = new ArrayList<>();
         GerenciarPessoa gp = new GerenciarPessoa(pessoas);
         GerenciarProduto gpr = new GerenciarProduto(produtos);
-        GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos, pessoas);
+        GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos, pessoa);
         GerenciarPagamento gpa = new GerenciarPagamento(pagamentos);
         Scanner scn = new Scanner(System.in);
         Scanner scs = new Scanner(System.in);
-        int opcao, resp, pos;
-        String log = "", cpfCnpj;
+        int opcao, resp, pos,escolha;
+        String log = "", cpfCnpj, buscarCpfCnpj;
         Pedido pedido;
         Produto produto;
         Pagamento pagamento;
-        Pessoa pessoa;
+        float quantidade = 0;
 
         // Menu de opções
         do {
@@ -30,9 +31,9 @@ public class Main {
             System.out.println("3 - Gerenciar Pedido");
             System.out.println("4 - Gerenciar Pagamento");
             System.out.println("0 - Sair");
-            opcao = scn.nextInt();
+            escolha = scn.nextInt();
 
-            switch (opcao) {
+            switch (escolha) {
                 case 1: // Gerenciar Pessoa
                     System.out.println("1 - Inserir cliente");
                     System.out.println("2 - Alterar cliente");
@@ -86,14 +87,13 @@ public class Main {
                             }
                             break;
                         case 2: // Alterar cliente
-
                             System.out.println("-[Alteração]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            cpfCnpj = scs.nextLine();
-                            pessoa = gp.consultarPessoas(cpfCnpj);
+                            buscarCpfCnpj = scs.nextLine();
+                            pessoa = gp.consultarPessoas(buscarCpfCnpj);
 
                             if (pessoa instanceof PessoaFisica) {
-                                mostrarClientes(gp.consultarPessoas(cpfCnpj));
+                                mostrarClientes(gp.consultarPessoas(buscarCpfCnpj));
 
                                 System.out.println("Confirmar alteração? (1-sim / 2-não)");
                                 resp = scn.nextInt();
@@ -121,7 +121,8 @@ public class Main {
                                                 "Digite a nova data de nascimento do cliente no formato (yyyy-MM-dd)");
                                         String dataStr = scs.nextLine();
                                         LocalDate dataDeNascimento = LocalDate.parse(dataStr);
-                                        log = gp.alterarPessoaFisica(cpfCnpj,novoCpf, novoNome, novoEndereco, novoTelefone,
+                                        log = gp.alterarPessoaFisica(buscarCpfCnpj, novoCpf, novoNome, novoEndereco,
+                                                novoTelefone,
                                                 dataDeNascimento);
                                     } catch (Exception e) {
                                         System.out.println("Data inválida" + e);
@@ -135,7 +136,7 @@ public class Main {
                                     System.out.println("Operação cancelada");
                                 }
                             } else if (pessoa instanceof PessoaJuridica) {
-                                mostrarClientes(gp.consultarPessoas(cpfCnpj));
+                                mostrarClientes(gp.consultarPessoas(buscarCpfCnpj));
 
                                 System.out.println("Confirmar alteração? (1-sim / 2-não)");
                                 resp = scn.nextInt();
@@ -156,7 +157,8 @@ public class Main {
                                     System.out.println("Digite a nova razão social do cliente: ");
                                     String novaRazaoSocial = scs.nextLine();
 
-                                    log = gp.alterarPessoaJuridica(novoNome, novoEndereco, novoTelefone, novoCnpj,
+                                    log = gp.alterarPessoaJuridica(buscarCpfCnpj, novoNome, novoEndereco, novoTelefone,
+                                            novoCnpj,
                                             novaRazaoSocial);
 
                                     if (!log.isEmpty()) {
@@ -229,6 +231,7 @@ public class Main {
                     System.out.println("0 - Relatório");
                     opcao = scn.nextInt();
                     switch (opcao) {
+
                         case 1: // Inserir produto
                             System.out.println("-[Inclusão]-");
                             System.out.println("Digite o nome do produto: ");
@@ -241,7 +244,8 @@ public class Main {
                             float valor = scn.nextFloat();
 
                             System.out.println("Digite a quantidade do produto: ");
-                            float quantidade = scn.nextInt();
+                            quantidade = scn.nextInt();
+
                             log = gpr.inserirProduto(nome, descricao, valor, quantidade);
                             if (!log.isEmpty()) {
                                 System.out.println("Erro: " + log + "Tente novamente.");
@@ -292,7 +296,6 @@ public class Main {
                                     System.out.println("Operação cancelada");
                                 }
                             }
-
                             break;
                         case 3: // Excluir produto
                             System.out.println("-[Exclusão]-");
@@ -365,12 +368,20 @@ public class Main {
                     opcao = scn.nextInt();
                     switch (opcao) {
                         case 1: // Inserir pedido
+
                             System.out.println("-[Inclusão]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            cpfCnpj = scs.nextLine();
-                            mostrarClientes(gp.consultarPessoas(cpfCnpj));
+                            buscarCpfCnpj = scs.nextLine();
+                            pessoa = gp.consultarPessoas(buscarCpfCnpj);
 
-                            System.out.println("Confirmar alteração? (1-sim / 2-não)");
+                            if (pessoa == null) {
+                                System.out.println("Cliente não encontrado");
+                                break;
+                            }
+
+                            mostrarClientes(pessoa);
+
+                            System.out.println("Deseja adicionar este cliente ? (1-sim / 2-não)");
                             resp = scn.nextInt();
 
                             while (resp != 1 && resp != 2) {
@@ -380,8 +391,55 @@ public class Main {
 
                             if (resp == 1) {
 
-                            }
+                                do {
 
+                                    int op;
+
+                                    System.out.println("Digite a posição do produto: ");
+                                    pos = scn.nextInt();
+                                    produto = gpr.consultarProduto(pos);
+
+                                    if (produto == null) {
+                                        System.out.println("Produto não encontrado");
+                                        break;
+                                    }
+
+                                    mostrarProdutos(produto);
+
+                                    System.out.println("Confirmar produto? (1-sim / 2-não)");
+                                    op = scn.nextInt();
+
+                                    while (op != 1 && op != 2) {
+                                        System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                        op = scn.nextInt();
+                                    }
+
+                                    System.out.println("Digite a quantidade do produto: ");
+                                    quantidade = scn.nextFloat();
+
+                                    System.out.println("Deseja adicionar outro produto? (1-sim / 2-não)");
+                                    resp = scn.nextInt();
+
+                                } while (resp == 1);
+
+                                try {
+
+                                    System.out.println("Digite a data do pedido: ");
+                                    String dataStr = scs.nextLine();
+                                    LocalDate data = LocalDate.parse(dataStr);
+
+                                    float valorTotal = (float) (produto.getPreco() * quantidade);
+
+                                    gpe.inserirPedido(pessoas, produtos, quantidade, valorTotal, data);
+
+                                } catch (Exception e) {
+                                    System.out.println("Data inválida" + e);
+                                }
+
+                            } else if (resp == 2) {
+                                System.out.println("Operação cancelada");
+                                break;
+                            }
                             break;
                         case 2: // Alterar pedido
                             System.out.println("-[Alteração]-");
@@ -391,6 +449,15 @@ public class Main {
                             break;
                         case 4: // Buscar pedido
                             System.out.println("-[Consulta]-");
+                            System.out.println("Digite a posição que deseja consultar:");
+                            pos = scn.nextInt();
+                            pedido = gpe.consultarPedido(pos);
+                            if(pedido!=null){
+                                System.out.println("[Pedido encontrado:]");
+                                mostrarPedidos(pedido);
+                            }else{
+                                System.out.println("Pedido não encontrado");
+                            }
                             break;
                         case 5: // Relatório
                             System.out.println("-[Relatório]-");
@@ -444,7 +511,7 @@ public class Main {
                     System.out.println("Opção inválida");
                     break;
             }
-        } while (opcao != 0);
+        } while (escolha != 0);
         scn.close();
         scs.close();
     }
@@ -480,7 +547,9 @@ public class Main {
         System.out.println("\n--- Dados do Pedido ---");
         System.out.println("Cliente: " + pedido.getPessoa().getNome());
         System.out.println("Data: " + pedido.getData());
-        System.out.println("Produtos: " + pedido.getProdutos());
+        for (Produto produto : pedido.getProdutos()) {
+            System.out.println("Produtos: " + produto.getNome());
+        }
         System.out.println("Valor Total: " + pedido.getValorTotal());
         System.out.println("-------------------------------------------\n");
     }

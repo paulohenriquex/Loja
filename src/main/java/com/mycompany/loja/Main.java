@@ -13,16 +13,16 @@ public class Main {
         ArrayList<Pagamento> pagamentos = new ArrayList<>();
         GerenciarPessoa gp = new GerenciarPessoa(pessoas);
         GerenciarProduto gpr = new GerenciarProduto(produtos);
-        GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos, pessoa);
+        GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos);
         GerenciarPagamento gpa = new GerenciarPagamento(pagamentos);
         Scanner scn = new Scanner(System.in);
         Scanner scs = new Scanner(System.in);
-        int opcao, resp, pos,escolha;
+        int opcao, resp, pos, escolha;
         String log = "", cpfCnpj, buscarCpfCnpj;
         Pedido pedido;
         Produto produto;
         Pagamento pagamento;
-        float quantidade = 0;
+        float quantidade = 0,valorTotal=0;
 
         // Menu de opções
         do {
@@ -391,6 +391,8 @@ public class Main {
 
                             if (resp == 1) {
 
+                                ArrayList<Produto> produtosDoPedido = new ArrayList<>();
+
                                 do {
 
                                     int op;
@@ -417,6 +419,11 @@ public class Main {
                                     System.out.println("Digite a quantidade do produto: ");
                                     quantidade = scn.nextFloat();
 
+                                  
+                                    produtosDoPedido.add(produto);
+                                    valorTotal += (float) (produto.getPreco() * quantidade);
+
+
                                     System.out.println("Deseja adicionar outro produto? (1-sim / 2-não)");
                                     resp = scn.nextInt();
 
@@ -428,9 +435,9 @@ public class Main {
                                     String dataStr = scs.nextLine();
                                     LocalDate data = LocalDate.parse(dataStr);
 
-                                    float valorTotal = (float) (produto.getPreco() * quantidade);
+                                   
 
-                                    gpe.inserirPedido(pessoas, produtos, quantidade, valorTotal, data);
+                                    log = gpe.inserirPedido(pessoa, produtosDoPedido, quantidade, valorTotal, data);
 
                                 } catch (Exception e) {
                                     System.out.println("Data inválida" + e);
@@ -452,10 +459,10 @@ public class Main {
                             System.out.println("Digite a posição que deseja consultar:");
                             pos = scn.nextInt();
                             pedido = gpe.consultarPedido(pos);
-                            if(pedido!=null){
+                            if (pedido != null) {
                                 System.out.println("[Pedido encontrado:]");
                                 mostrarPedidos(pedido);
-                            }else{
+                            } else {
                                 System.out.println("Pedido não encontrado");
                             }
                             break;
@@ -514,6 +521,7 @@ public class Main {
         } while (escolha != 0);
         scn.close();
         scs.close();
+        
     }
 
     public static void mostrarClientes(Pessoa pessoa) {
@@ -544,14 +552,23 @@ public class Main {
     }
 
     public static void mostrarPedidos(Pedido pedido) {
+        if (pedido == null) {
+            System.out.println("Pedido inválido!");
+            return;
+        }
         System.out.println("\n--- Dados do Pedido ---");
         System.out.println("Cliente: " + pedido.getPessoa().getNome());
-        System.out.println("Data: " + pedido.getData());
-        for (Produto produto : pedido.getProdutos()) {
-            System.out.println("Produtos: " + produto.getNome());
+        System.out.println("Data do Pedido: " + pedido.getData());
+        System.out.println("Valor Total: R$ " + pedido.getValorTotal());
+        System.out.println("Quantidade total: " + pedido.getQuantidade());
+        for(Produto pro: pedido.getProdutos()){
+            System.out.println("Nome: " + pro.getNome());
+            System.out.println("Preço: R$ " + pro.getPreco());
         }
-        System.out.println("Valor Total: " + pedido.getValorTotal());
         System.out.println("-------------------------------------------\n");
     }
+    
+
+ 
 
 }

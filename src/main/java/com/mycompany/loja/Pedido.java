@@ -1,16 +1,29 @@
 package com.mycompany.loja;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 public class Pedido {
     private Pessoa pessoa;
-    private Produto produto;
+    private ArrayList<Produto> produtos;
     private float quantidade;
     private float valorTotal;
+    private LocalDate data;
 
-    public Pedido(Pessoa pessoa, Produto produto, float quantidade, float valorTotal) {
+    public Pedido(Pessoa pessoa, ArrayList<Produto> produto, float quantidade, float valorTotal, LocalDate data) {
         this.pessoa = pessoa;
-        this.produto = produto;
+        this.produtos = produto;
         this.quantidade = quantidade;
         this.valorTotal = valorTotal;
+        this.data = data;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public Pessoa getPessoa() {
@@ -19,14 +32,6 @@ public class Pedido {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
     }
 
     public float getQuantidade() {
@@ -43,6 +48,14 @@ public class Pedido {
 
     public void setValorTotal(float valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public ArrayList<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(ArrayList<Produto> produtos) {
+        this.produtos = produtos;
     }
 
 }

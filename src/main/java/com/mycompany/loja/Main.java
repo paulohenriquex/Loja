@@ -6,23 +6,22 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         ArrayList<Pessoa> pessoas = new ArrayList<>();
         ArrayList<Produto> produtos = new ArrayList<>();
         ArrayList<Pedido> pedidos = new ArrayList<>();
         ArrayList<Pagamento> pagamentos = new ArrayList<>();
         GerenciarPessoa gp = new GerenciarPessoa(pessoas);
         GerenciarProduto gpr = new GerenciarProduto(produtos);
-        GerenciarPedido gpe = new GerenciarPedido(pedidos);
+        GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos, pessoas);
         GerenciarPagamento gpa = new GerenciarPagamento(pagamentos);
         Scanner scn = new Scanner(System.in);
         Scanner scs = new Scanner(System.in);
-        int opcao, resp,pos;
+        int opcao, resp, pos;
         String log = "", cpfCnpj;
-        Pessoa pessoa;
         Pedido pedido;
         Produto produto;
         Pagamento pagamento;
+        Pessoa pessoa;
 
         // Menu de opções
         do {
@@ -66,12 +65,14 @@ public class Main {
                                             .println("Digite a data de nascimento do cliente no formato (yyyy-MM-dd) ");
                                     String data = scs.nextLine();
                                     LocalDate dataNascimento = LocalDate.parse(data);
-                                    gp.inserirPessoa(nome, endereco, telefone, cpf, dataNascimento);
-
+                                    log = gp.inserirPessoa(nome, endereco, telefone, cpf, dataNascimento);
+                                    if (!log.isEmpty()) {
+                                        System.out.println("Erro: " + log + "Tente novamente.");
+                                    }
                                 } catch (Exception e) {
                                     System.out.println("Data inválida" + e);
                                 }
-                            } else if (opcao == 2) {
+                            } else if (tipo == 2) {
                                 System.out.println("Digite o CNPJ do cliente: ");
                                 String cnpj = scs.nextLine();
 
@@ -120,11 +121,16 @@ public class Main {
                                                 "Digite a nova data de nascimento do cliente no formato (yyyy-MM-dd)");
                                         String dataStr = scs.nextLine();
                                         LocalDate dataDeNascimento = LocalDate.parse(dataStr);
-                                        gp.alterarPessoaFisica(novoCpf, novoNome, novoEndereco, novoTelefone,
+                                        log = gp.alterarPessoaFisica(cpfCnpj,novoCpf, novoNome, novoEndereco, novoTelefone,
                                                 dataDeNascimento);
                                     } catch (Exception e) {
                                         System.out.println("Data inválida" + e);
                                     }
+
+                                    if (!log.isEmpty()) {
+                                        System.out.println("Erro: " + log + " Tente novamente.");
+                                    }
+
                                 } else if (resp == 2) {
                                     System.out.println("Operação cancelada");
                                 }
@@ -150,9 +156,14 @@ public class Main {
                                     System.out.println("Digite a nova razão social do cliente: ");
                                     String novaRazaoSocial = scs.nextLine();
 
-                                    gp.alterarPessoaJuridica(novoNome, novoEndereco, novoTelefone, novoCnpj,
+                                    log = gp.alterarPessoaJuridica(novoNome, novoEndereco, novoTelefone, novoCnpj,
                                             novaRazaoSocial);
-                                } else if (resp == 2) {
+
+                                    if (!log.isEmpty()) {
+                                        System.out.println("Erro: " + log + " Tente novamente.");
+                                    }
+
+                                } else {
                                     System.out.println("Operação cancelada");
                                 }
                             }
@@ -181,13 +192,6 @@ public class Main {
                                 }
                             } else if (resp == 2) {
                                 System.out.println("Operação cancelada");
-                            }
-
-                            log = gp.excluirPessoa(cpfCnpj);
-                            if (!log.isEmpty()) {
-                                System.out.println("Erro: " + log + "Tente novamente.");
-                            } else {
-                                System.out.println("Cliente excluído com sucesso");
                             }
                             break;
                         case 4: // Buscar cliente
@@ -238,73 +242,93 @@ public class Main {
 
                             System.out.println("Digite a quantidade do produto: ");
                             float quantidade = scn.nextInt();
-                            gpr.inserirProduto(nome, descricao, valor, quantidade);
+                            log = gpr.inserirProduto(nome, descricao, valor, quantidade);
+                            if (!log.isEmpty()) {
+                                System.out.println("Erro: " + log + "Tente novamente.");
+                            } else {
+                                System.out.println("Produto cadastrado com sucesso");
+                            }
                             break;
                         case 2: // Alterar produto
                             System.out.println("-[Alteração]-");
-                            System.out.println("Digite a posição do produto: entre 0 e " + (produtos.size()-1)+ " :");
+                            System.out
+                                    .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
                             pos = scn.nextInt();
 
                             produto = gpr.consultarProduto(pos);
-                            mostrarProdutos(produto);
+                            if (produto == null) {
+                                System.out.println("Produto não encontrado");
+                            } else {
+                                mostrarProdutos(produto);
 
-                            System.out.println("Confirmar alteração? (1-sim / 2-não)");
-                            resp = scn.nextInt();
-
-                            while (resp <0 || resp>2) {
-                                System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                System.out.println("Confirmar alteração? (1-sim / 2-não)");
                                 resp = scn.nextInt();
-                            }
 
-                            if(resp == 1){
+                                while (resp < 0 || resp > 2) {
+                                    System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                    resp = scn.nextInt();
+                                }
 
-                                System.out.println("Digite o novo nome do produto: ");
-                                String novoNome = scs.nextLine();
-    
-                                System.out.println("Digite a nova descrição do produto: ");
-                                String novaDescricao = scs.nextLine();
-    
-                                System.out.println("Digite o novo valor do produto: ");
-                                float novoValor = scn.nextFloat();
-    
-                                System.out.println("Digite a nova quantidade do produto: ");
-                                float novaQuantidade = scn.nextInt();
-    
-                                gpr.alterarProduto(novoNome, novaDescricao, novoValor, novaQuantidade,pos);
-    
-                            }else if(resp == 2){
-                                System.out.println("Operação cancelada");
+                                if (resp == 1) {
+
+                                    System.out.println("Digite o novo nome do produto: ");
+                                    String novoNome = scs.nextLine();
+
+                                    System.out.println("Digite a nova descrição do produto: ");
+                                    String novaDescricao = scs.nextLine();
+
+                                    System.out.println("Digite o novo valor do produto: ");
+                                    float novoValor = scn.nextFloat();
+
+                                    System.out.println("Digite a nova quantidade do produto: ");
+                                    float novaQuantidade = scn.nextInt();
+
+                                    log = gpr.alterarProduto(novoNome, novaDescricao, novoValor, novaQuantidade, pos);
+                                    if (!log.isEmpty()) {
+                                        System.out.println("Erro: " + log + "Tente novamente.");
+                                    }
+
+                                } else if (resp == 2) {
+                                    System.out.println("Operação cancelada");
+                                }
                             }
 
                             break;
                         case 3: // Excluir produto
                             System.out.println("-[Exclusão]-");
-                            System.out.println("Digite a posição do produto: entre 0 e " + (produtos.size()-1)+ " :");
+                            System.out
+                                    .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
                             pos = scn.nextInt();
 
                             produto = gpr.consultarProduto(pos);
+                            if (produto == null) {
+                                System.out.println("Produto não encontrado");
+                            }
                             mostrarProdutos(produto);
-
 
                             System.out.println("Confirmar alteração? (1-sim / 2-não)");
                             resp = scn.nextInt();
 
-                            while (resp <0 || resp>2) {
+                            while (resp < 0 || resp > 2) {
                                 System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
                                 resp = scn.nextInt();
                             }
 
-                            if(resp == 1){
+                            if (resp == 1) {
                                 log = gpr.excluirProduto(pos);
-                                System.out.println("Produto excluído com sucesso");
-    
-                            }else if(resp == 2){
+                                if (!log.isEmpty()) {
+                                    System.out.println("Erro: " + log + "Tente novamente.");
+                                } else {
+                                    System.out.println("Produto excluído com sucesso");
+                                }
+                            } else if (resp == 2) {
                                 System.out.println("Operação cancelada");
                             }
                             break;
                         case 4: // Consultar produto
                             System.out.println("-[Consulta]-");
-                            System.out.println("Digite a posição do produto: entre 0 e " + (produtos.size()-1)+ " :");
+                            System.out
+                                    .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
                             pos = scn.nextInt();
                             produto = gpr.consultarProduto(pos);
                             if (produto != null) {
@@ -317,10 +341,12 @@ public class Main {
                         case 5: // Relatório
                             System.out.println("-[Relatório]-");
                             ArrayList<Produto> p = gpr.relatorio();
-                            if(!p.isEmpty()){
-                                for(Produto pro:p){
+                            if (!p.isEmpty()) {
+                                for (Produto pro : p) {
                                     mostrarProdutos(pro);
                                 }
+                            } else {
+                                System.out.println("Nenhum produto cadastrado");
                             }
                             break;
                         case 0: // Sair
@@ -340,6 +366,22 @@ public class Main {
                     switch (opcao) {
                         case 1: // Inserir pedido
                             System.out.println("-[Inclusão]-");
+                            System.out.println("Digite o CPF/CNPJ do cliente: ");
+                            cpfCnpj = scs.nextLine();
+                            mostrarClientes(gp.consultarPessoas(cpfCnpj));
+
+                            System.out.println("Confirmar alteração? (1-sim / 2-não)");
+                            resp = scn.nextInt();
+
+                            while (resp != 1 && resp != 2) {
+                                System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                resp = scn.nextInt();
+                            }
+
+                            if (resp == 1) {
+
+                            }
+
                             break;
                         case 2: // Alterar pedido
                             System.out.println("-[Alteração]-");
@@ -352,6 +394,12 @@ public class Main {
                             break;
                         case 5: // Relatório
                             System.out.println("-[Relatório]-");
+                            ArrayList<Pedido> p = gpe.relatorio();
+                            if (!p.isEmpty()) {
+                                for (Pedido ped : p) {
+                                    mostrarPedidos(ped);
+                                }
+                            }
                             break;
                         case 0: // Sair
                             break;
@@ -399,7 +447,6 @@ public class Main {
         } while (opcao != 0);
         scn.close();
         scs.close();
-
     }
 
     public static void mostrarClientes(Pessoa pessoa) {
@@ -426,6 +473,15 @@ public class Main {
         System.out.println("Descrição: " + produto.getDescricao());
         System.out.println("Valor: " + produto.getPreco());
         System.out.println("Quantidade: " + produto.getQuantidade());
+        System.out.println("-------------------------------------------\n");
+    }
+
+    public static void mostrarPedidos(Pedido pedido) {
+        System.out.println("\n--- Dados do Pedido ---");
+        System.out.println("Cliente: " + pedido.getPessoa().getNome());
+        System.out.println("Data: " + pedido.getData());
+        System.out.println("Produtos: " + pedido.getProdutos());
+        System.out.println("Valor Total: " + pedido.getValorTotal());
         System.out.println("-------------------------------------------\n");
     }
 

@@ -7,7 +7,7 @@ public class PessoaFisica extends Pessoa {
     private LocalDate dataDeNascimento;
 
     public PessoaFisica(String nome, String endereco, String telefone, String cpf, LocalDate dataDeNascimento) {
-        super(nome,endereco,telefone);
+        super(nome, endereco, telefone);
         this.cpf = cpf;
         this.dataDeNascimento = dataDeNascimento;
     }

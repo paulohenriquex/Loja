@@ -1,11 +1,11 @@
 package com.mycompany.loja;
 
-public class PessoaJuridica extends Pessoa{
+public class PessoaJuridica extends Pessoa {
     private String razaoSocial;
     private String cnpj;
 
     public PessoaJuridica(String nome, String endereco, String telefone, String cnpj, String razaoSocial) {
-        super(nome,endereco,telefone);
+        super(nome, endereco, telefone);
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
     }

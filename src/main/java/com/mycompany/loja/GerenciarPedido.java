@@ -36,6 +36,34 @@ public class GerenciarPedido {
         }
         return log;
     }
+
+    public String excluirPedido(int pos) {
+
+        String log = "";
+        if (pos < 0 || pos >= pedidos.size()) {
+            System.out.println("Intervalo inválido.");
+        } else {
+            Pedido pedido = pedidos.get(pos);
+            pedidos.remove(pedido);
+        }
+
+        return log;
+
+    }
+
+    public String alterarPedido(int pos, Pessoa pessoa, ArrayList<Produto> produto, float quantidade, float valorTotal,
+            LocalDate data) {
+        String log = "";
+
+        if (pessoa == null || produto == null || quantidade == 0 || valorTotal == 0 || data == null) {
+            log = "Existem campos vazio";
+        } else {
+            
+        }
+
+        return log;
+    }
+
     public Pedido consultarPedido(int pos) {
         if (pos < 0 || pos >= pedidos.size()) {
             return null;

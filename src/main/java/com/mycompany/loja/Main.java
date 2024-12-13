@@ -22,7 +22,7 @@ public class Main {
         Pedido pedido;
         Produto produto;
         Pagamento pagamento;
-        float quantidade = 0,valorTotal=0;
+        float quantidade = 0, valorTotal = 0;
 
         // Menu de opções
         do {
@@ -419,10 +419,8 @@ public class Main {
                                     System.out.println("Digite a quantidade do produto: ");
                                     quantidade = scn.nextFloat();
 
-                                  
                                     produtosDoPedido.add(produto);
                                     valorTotal += (float) (produto.getPreco() * quantidade);
-
 
                                     System.out.println("Deseja adicionar outro produto? (1-sim / 2-não)");
                                     resp = scn.nextInt();
@@ -434,8 +432,6 @@ public class Main {
                                     System.out.println("Digite a data do pedido: ");
                                     String dataStr = scs.nextLine();
                                     LocalDate data = LocalDate.parse(dataStr);
-
-                                   
 
                                     log = gpe.inserirPedido(pessoa, produtosDoPedido, quantidade, valorTotal, data);
 
@@ -450,9 +446,34 @@ public class Main {
                             break;
                         case 2: // Alterar pedido
                             System.out.println("-[Alteração]-");
+                            System.out.println("Digite a posição do pedido");
+                            pos = scn.nextInt();
+
+                            System.out.println("Digite o CPF/CNPJ do cliente: ");
+                            cpfCnpj = scs.nextLine();
+
+                            System.out.println("Digite a posição do produto: ");
+                            String posPro = scn.nextLine();
+
+                            System.out.println("Digite a quantidade do produto: ");
+                            
                             break;
                         case 3: // Excluir pedido
                             System.out.println("-[Exclusão]-");
+                            System.out.println("Digite a posição do pedido: ");
+                            pos = scn.nextInt();
+                            pedido = gpe.consultarPedido(pos);
+                            if (pedido == null) {
+                                System.out.println("Não existem pedidos cadastrados.");
+                            } else {
+                                mostrarPedidos(pedido);
+                                log = gpe.excluirPedido(pos);
+                                if (log.isEmpty()) {
+                                    System.out.println("Produto excluido com sucesso.");
+                                } else {
+                                    System.out.println("Erro: " + log);
+                                }
+                            }
                             break;
                         case 4: // Buscar pedido
                             System.out.println("-[Consulta]-");
@@ -521,7 +542,7 @@ public class Main {
         } while (escolha != 0);
         scn.close();
         scs.close();
-        
+
     }
 
     public static void mostrarClientes(Pessoa pessoa) {
@@ -561,14 +582,11 @@ public class Main {
         System.out.println("Data do Pedido: " + pedido.getData());
         System.out.println("Valor Total: R$ " + pedido.getValorTotal());
         System.out.println("Quantidade total: " + pedido.getQuantidade());
-        for(Produto pro: pedido.getProdutos()){
+        for (Produto pro : pedido.getProdutos()) {
             System.out.println("Nome: " + pro.getNome());
             System.out.println("Preço: R$ " + pro.getPreco());
         }
         System.out.println("-------------------------------------------\n");
     }
-    
-
- 
 
 }

@@ -51,14 +51,22 @@ public class GerenciarPedido {
 
     }
 
-    public String alterarPedido(int pos, Pessoa pessoa, ArrayList<Produto> produto, float quantidade, float valorTotal,
-            LocalDate data) {
+    public String alterarPedido(Pessoa pessoa, Produto produto, float quantidade, float valorTotal,
+            int posPedido, int posProduto, LocalDate data) {
         String log = "";
 
         if (pessoa == null || produto == null || quantidade == 0 || valorTotal == 0 || data == null) {
             log = "Existem campos vazio";
         } else {
-            
+
+        }
+
+        if (posProduto < 0 || posProduto >= produtos.size()) {
+            log = "Intervalo inválido";
+        } else if (posPedido < 0 || posPedido >= pedidos.size()) {
+            log = "Intervalo inválido";
+        } else {
+
         }
 
         return log;

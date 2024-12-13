@@ -445,7 +445,7 @@ public class Main {
                             }
                             break;
                         case 2: // Alterar pedido
-                            ArrayList<Produto> pros = null;
+                            ArrayList<Produto> novosProdutos = new ArrayList<>();
                             System.out.println("-[Alteração]-");
                             System.out.println("Digite a posição do pedido");
                             int posPedido = scn.nextInt();
@@ -453,112 +453,80 @@ public class Main {
                             pedido = gpe.consultarPedido(posPedido);
                             if (pedido == null) {
                                 System.out.println("Pedido não encontrado.");
-                                break;
+                                return;
                             }
 
                             mostrarPedidos(pedido);
 
-                            if (pedido != null) {
-                                // Mostrar todos os clientes cadastrados para que o usuário escolha
-                                System.out.println("Lista de Clientes:");
-                                ArrayList<Pessoa> clientes = gp.relatorio();
+                            System.out.println("Deseja alterar esse pedido? 1 - Sim ou 2 - Não: ");
+                            resp = scn.nextInt();
 
-                                for (Pessoa p : clientes) {
-                                    if (p instanceof PessoaFisica) {
-                                        PessoaFisica pf = (PessoaFisica) p;
-                                        System.out.println("Nome: " + pf.getNome());
-                                        System.out.println("CPF/CNPJ: " + pf.getCpf());
-                                        System.out.println("-----------------------------");
-                                    } else if (p instanceof PessoaJuridica) {
-                                        PessoaJuridica pj = (PessoaJuridica) p;
-                                        System.out.println("Nome: " + pj.getNome());
-                                        System.out.println("CPF/CNPJ: " + pj.getCnpj());
-                                        System.out.println("-----------------------------");
-                                    }
-                                }
-
-                                System.out.println("Digite a CPF/CNPJ do novo cliente: ");
-                                cpfCnpj = scs.nextLine();
-
-                                System.out.println("Deseja alterar o cliente? 1 - Sim ou 2 - Não: ");
-                                resp = scn.nextInt();
-
-                                while (resp != 1 && resp != 2) {
-                                    System.out.println("Deseja alterar o cliente? 1 - Sim ou 2 - Não: ");
-                                    resp = scn.nextInt();
-                                }
-
-                                
-
-                                pessoa = gp.consultarPessoas(cpfCnpj);
-
-                                if (pessoa != null) {
-                                    mostrarClientes(pessoa);
-                                    System.out.println("Deseja alterar esse cliente? 1 - Sim ou 2 - Não: ");
-                                    resp = scn.nextInt();
-                                    if (resp == 1) {
-                                        do {
-
-                                            System.out.println("Digite a posição do produto: ");
-                                            int posProduto = scn.nextInt();
-                                            produto = gpr.consultarProduto(posProduto);
-                                            if (produto != null) {
-
-                                                mostrarProdutos(produto);
-
-                                                System.out.println("Deseja alterar esse produto? 1 - Sim ou 2 - Não: ");
-                                                resp = scn.nextInt();
-
-                                                System.out.println("Digite o novo nome: ");
-                                                String novoNome = scs.nextLine();
-
-                                                System.out.println("Digite o novo preço do produto: ");
-                                                float novoPreco = scn.nextFloat();
-
-                                                System.out.println("Digite a nova descrição: ");
-                                                String novaDescricao = scs.nextLine();
-
-                                                System.out.println("Digite a nova quantidade do produto: ");
-                                                float novaQuantidade = scn.nextFloat();
-
-                                                valorTotal += novaQuantidade * novoPreco;
-
-                                                System.out
-                                                        .println("Deseja alterar outro produto? 1 - Sim ou 2 - Não: ");
-                                                opc = scn.nextInt();
-
-                                                while (opc != 1 && opc != 2) {
-                                                    System.out
-                                                            .println(
-                                                                    "Deseja alterar outro produto? 1 - Sim ou 2 - Não: ");
-                                                    opc = scn.nextInt();
-
-                                                }
-                                                if (opc == 1) {
-
-                                                    Produto pro = new Produto(novoNome, novoPreco, novaDescricao,
-                                                            novaQuantidade);
-                                                    pros.add(pro);
-                                                } else {
-                                                    System.out.println("Digite a nova data do pedido: ");
-                                                    String novaDataStr = scs.nextLine();
-                                                    LocalDate novaData = LocalDate.parse(novaDataStr);
-
-                                                    gpe.alterarPedido(pessoa, produto, quantidade, valorTotal,
-                                                            posPedido, posProduto, novaData);
-                                                }
-                                            }
-                                        } while (opc != 2);
-
-                                    } else {
-                                        System.out.println("Pessoa não encontrada.");
-                                    }
-                                }
-
-                            } else {
-                                System.out.println("Pedido não encontrado.");
+                            if (resp != 1) {
+                                return;
                             }
 
+                            System.out.println("Lista de clientes");
+                            ArrayList<Pessoa> listaClientes = gp.relatorio();
+                            for (Pessoa p : listaClientes) {
+                                mostrarClientes(p);
+                            }
+
+                            // Alterar cliente
+                            System.out.println("Digite o CPF/CNPJ do novo cliente:");
+                            cpfCnpj = scs.nextLine();
+                            pessoa = gp.consultarPessoas(cpfCnpj);
+                            mostrarClientes(pessoa);
+                            if (pessoa == null) {
+                                System.out.println("Cliente não encontrado.");
+                                return;
+                            }
+
+                            // Alterar produtos
+                            do {
+                                System.out.println("Digite a posição do produto:");
+                                int posProduto = scn.nextInt();
+                                produto = gpr.consultarProduto(posProduto);
+
+                                if (produto != null) {
+                                    mostrarProdutos(produto);
+
+                                    System.out.println("Deseja alterar esse produto? 1 - Sim ou 2 - Não: ");
+                                    resp = scn.nextInt();
+
+                                    if (resp == 1) {
+                                        System.out.println("Digite o novo nome do produto:");
+                                        String novoNome = scs.nextLine();
+                                        System.out.println("Digite o novo preço:");
+                                        float novoPreco = scn.nextFloat();
+                                        System.out.println("Digite a nova descrição:");
+                                        String novaDescricao = scs.nextLine();
+                                        System.out.println("Digite a nova quantidade:");
+                                        float novaQuantidade = scn.nextFloat();
+
+                                        Produto novoProduto = new Produto(novoNome, novoPreco, novaDescricao,
+                                                novaQuantidade);
+                                        novosProdutos.add(novoProduto);
+                                    }
+                                }
+
+                                System.out.println("Deseja alterar outro produto? 1 - Sim ou 2 - Não:");
+                                resp = scn.nextInt();
+                            } while (resp == 1);
+
+                            // Alterar data do pedido
+                            System.out.println("Digite a nova data do pedido (AAAA-MM-DD):");
+                            String novaDataStr = scs.nextLine();
+                            LocalDate novaData = LocalDate.parse(novaDataStr);
+
+                            // Atualizar o pedido
+                            log = gpe.alterarPedido(pessoa, novosProdutos, novosProdutos.size(),
+                                    calcularValorTotal(novosProdutos),
+                                    posPedido, novaData);
+                            if (log.isEmpty()) {
+                                System.out.println("Pedido alterado com sucesso.");
+                            } else {
+                                System.out.println("Erro: " + log);
+                            }
                             break;
                         case 3: // Excluir pedido
                             System.out.println("-[Exclusão]-");
@@ -689,6 +657,14 @@ public class Main {
             System.out.println("Preço: R$ " + pro.getPreco());
         }
         System.out.println("-------------------------------------------\n");
+    }
+
+    private static float calcularValorTotal(ArrayList<Produto> produtos) {
+        float total = 0;
+        for (Produto produto : produtos) {
+            total += produto.getPreco() * produto.getQuantidade();
+        }
+        return total;
     }
 
 }

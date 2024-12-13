@@ -51,23 +51,29 @@ public class GerenciarPedido {
 
     }
 
-    public String alterarPedido(Pessoa pessoa, Produto produto, float quantidade, float valorTotal,
-            int posPedido, int posProduto, LocalDate data) {
+    public String alterarPedido(Pessoa pessoa, ArrayList<Produto> novosProdutos, float quantidade, float valorTotal,
+            int posPedido, LocalDate novaData) {
         String log = "";
 
-        if (pessoa == null || produto == null || quantidade == 0 || valorTotal == 0 || data == null) {
-            log = "Existem campos vazio";
-        } else {
-
+        if (pessoa == null || novosProdutos == null || novosProdutos.isEmpty() || quantidade <= 0 || valorTotal <= 0
+                || novaData == null) {
+            return "Campos inválidos fornecidos.";
         }
 
-        if (posProduto < 0 || posProduto >= produtos.size()) {
-            log = "Intervalo inválido";
-        } else if (posPedido < 0 || posPedido >= pedidos.size()) {
-            log = "Intervalo inválido";
-        } else {
-
+        // Verificar se o índice do pedido é válido
+        if (posPedido < 0 || posPedido >= pedidos.size()) {
+            return "Pedido não encontrado no índice especificado.";
         }
+
+        // Obter o pedido a ser alterado
+        Pedido pedido = pedidos.get(posPedido);
+
+        // Atualizar os atributos do pedido
+        pedido.setPessoa(pessoa);
+        pedido.setProdutos(new ArrayList<>(novosProdutos)); // Substituir lista de produtos
+        pedido.setQuantidade(quantidade);
+        pedido.setValorTotal(valorTotal);
+        pedido.setData(novaData);
 
         return log;
     }

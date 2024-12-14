@@ -1,19 +1,32 @@
 package com.mycompany.loja;
 
+import java.time.LocalDate;
+
 public class Pagamento {
 
     private String formaPagamento;
-    private double valor;
-    private String dataPagamento;
-    private String status;
+    private float valor;
+    private LocalDate dataPagamento;
+    private boolean status;
     private Pedido pedido;
+    private float troco;
 
-    public Pagamento(String formaPagamento, double valor, String dataPagamento, String status, Pedido pedido) {
+    public Pagamento(String formaPagamento, float valor, LocalDate dataPagamento, boolean status, Pedido pedido,
+            float troco) {
         this.formaPagamento = formaPagamento;
         this.valor = valor;
         this.dataPagamento = dataPagamento;
         this.status = status;
         this.pedido = pedido;
+        this.troco = troco;
+    }
+
+    public float getTroco() {
+        return troco;
+    }
+
+    public void setTroco(float troco) {
+        this.troco = troco;
     }
 
     public String getFormaPagamento() {
@@ -28,23 +41,23 @@ public class Pagamento {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(float valor) {
         this.valor = valor;
     }
 
-    public String getDataPagamento() {
+    public LocalDate getDataPagamento() {
         return dataPagamento;
     }
 
-    public void setDataPagamento(String dataPagamento) {
+    public void setDataPagamento(LocalDate dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

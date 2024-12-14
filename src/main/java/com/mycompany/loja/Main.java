@@ -14,11 +14,10 @@ public class Main {
         GerenciarPessoa gp = new GerenciarPessoa(pessoas);
         GerenciarProduto gpr = new GerenciarProduto(produtos);
         GerenciarPedido gpe = new GerenciarPedido(pedidos, produtos);
-        GerenciarPagamento gpa = new GerenciarPagamento(pagamentos);
-        Scanner scn = new Scanner(System.in);
-        Scanner scs = new Scanner(System.in);
+        GerenciarPagamento gpg = new GerenciarPagamento(pagamentos);
+        Scanner sc = new Scanner(System.in);
         int opcao, resp, pos, escolha, opc = 0;
-        String log = "", cpfCnpj, buscarCpfCnpj;
+        String log = "", cpfCnpj, buscarCpfCnpj, formaPagamento = "";
         Pedido pedido;
         Produto produto;
         Pagamento pagamento;
@@ -31,7 +30,8 @@ public class Main {
             System.out.println("3 - Gerenciar Pedido");
             System.out.println("4 - Gerenciar Pagamento");
             System.out.println("0 - Sair");
-            escolha = scn.nextInt();
+            escolha = sc.nextInt();
+            sc.nextLine();
 
             switch (escolha) {
                 case 1: // Gerenciar Pessoa
@@ -41,30 +41,32 @@ public class Main {
                     System.out.println("4 - Buscar cliente");
                     System.out.println("5 - Relatório");
                     System.out.println("0 - Sair");
-                    opcao = scn.nextInt();
+                    opcao = sc.nextInt();
+                    sc.nextLine();
 
                     switch (opcao) {
                         case 1: // Inserir cliente
                             System.out.println("-[Inclusão]-");
                             System.out.println("Digite o nome do cliente: ");
-                            String nome = scs.nextLine();
+                            String nome = sc.nextLine();
 
                             System.out.println("Digite o endereço do cliente: ");
-                            String endereco = scs.nextLine();
+                            String endereco = sc.nextLine();
 
                             System.out.println("Digite o telefone do cliente: ");
-                            String telefone = scs.nextLine();
+                            String telefone = sc.nextLine();
 
                             System.out.println("Digite (1-Pessoa Física / 2-Pessoa Jurídica): ");
-                            int tipo = scn.nextInt();
+                            int tipo = sc.nextInt();
+                            sc.nextLine();
                             if (tipo == 1) {
                                 System.out.println("Digite o CPF do cliente: ");
-                                String cpf = scs.nextLine();
+                                String cpf = sc.nextLine();
 
                                 try {
                                     System.out
                                             .println("Digite a data de nascimento do cliente no formato (yyyy-MM-dd) ");
-                                    String data = scs.nextLine();
+                                    String data = sc.nextLine();
                                     LocalDate dataNascimento = LocalDate.parse(data);
                                     log = gp.inserirPessoa(nome, endereco, telefone, cpf, dataNascimento);
                                     if (!log.isEmpty()) {
@@ -75,10 +77,10 @@ public class Main {
                                 }
                             } else if (tipo == 2) {
                                 System.out.println("Digite o CNPJ do cliente: ");
-                                String cnpj = scs.nextLine();
+                                String cnpj = sc.nextLine();
 
                                 System.out.println("Digite a razão social do cliente: ");
-                                String razaoSocial = scs.nextLine();
+                                String razaoSocial = sc.nextLine();
 
                                 log = gp.inserirPessoaJuridica(nome, endereco, telefone, cnpj, razaoSocial);
                                 if (!log.isEmpty()) {
@@ -89,37 +91,39 @@ public class Main {
                         case 2: // Alterar cliente
                             System.out.println("-[Alteração]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            buscarCpfCnpj = scs.nextLine();
+                            buscarCpfCnpj = sc.nextLine();
                             pessoa = gp.consultarPessoas(buscarCpfCnpj);
 
                             if (pessoa instanceof PessoaFisica) {
                                 mostrarClientes(gp.consultarPessoas(buscarCpfCnpj));
 
                                 System.out.println("Confirmar alteração? (1-sim / 2-não)");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
 
                                 while (resp != 1 && resp != 2) {
                                     System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                    resp = scn.nextInt();
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
                                 }
 
                                 if (resp == 1) {
                                     System.out.println("Digite o novo nome do cliente: ");
-                                    String novoNome = scs.nextLine();
+                                    String novoNome = sc.nextLine();
 
                                     System.out.println("Digite o novo endereço do cliente: ");
-                                    String novoEndereco = scs.nextLine();
+                                    String novoEndereco = sc.nextLine();
 
                                     System.out.println("Digite o novo telefone do cliente: ");
-                                    String novoTelefone = scs.nextLine();
+                                    String novoTelefone = sc.nextLine();
 
                                     System.out.println("Digite o novo CPF do cliente: ");
-                                    String novoCpf = scs.nextLine();
+                                    String novoCpf = sc.nextLine();
 
                                     try {
                                         System.out.println(
                                                 "Digite a nova data de nascimento do cliente no formato (yyyy-MM-dd)");
-                                        String dataStr = scs.nextLine();
+                                        String dataStr = sc.nextLine();
                                         LocalDate dataDeNascimento = LocalDate.parse(dataStr);
                                         log = gp.alterarPessoaFisica(buscarCpfCnpj, novoCpf, novoNome, novoEndereco,
                                                 novoTelefone,
@@ -139,23 +143,24 @@ public class Main {
                                 mostrarClientes(gp.consultarPessoas(buscarCpfCnpj));
 
                                 System.out.println("Confirmar alteração? (1-sim / 2-não)");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
 
                                 if (resp == 1) {
                                     System.out.println("Digite o novo nome do cliente: ");
-                                    String novoNome = scs.nextLine();
+                                    String novoNome = sc.nextLine();
 
                                     System.out.println("Digite o novo endereço do cliente: ");
-                                    String novoEndereco = scs.nextLine();
+                                    String novoEndereco = sc.nextLine();
 
                                     System.out.println("Digite o novo telefone do cliente: ");
-                                    String novoTelefone = scs.nextLine();
+                                    String novoTelefone = sc.nextLine();
 
                                     System.out.println("Digite o novo CNPJ do cliente: ");
-                                    String novoCnpj = scs.nextLine();
+                                    String novoCnpj = sc.nextLine();
 
                                     System.out.println("Digite a nova razão social do cliente: ");
-                                    String novaRazaoSocial = scs.nextLine();
+                                    String novaRazaoSocial = sc.nextLine();
 
                                     log = gp.alterarPessoaJuridica(buscarCpfCnpj, novoNome, novoEndereco, novoTelefone,
                                             novoCnpj,
@@ -173,15 +178,16 @@ public class Main {
                         case 3: // Excluir cliente
                             System.out.println("-[Excluir]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            cpfCnpj = scs.nextLine();
+                            cpfCnpj = sc.nextLine();
                             mostrarClientes(gp.consultarPessoas(cpfCnpj));
 
                             System.out.println("Confirmar exclusão? (1-sim / 2-não)");
-                            resp = scn.nextInt();
-
+                            resp = sc.nextInt();
+                            sc.nextLine();
                             while (resp != 1 && resp != 2) {
                                 System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
                             }
 
                             if (resp == 1) {
@@ -199,7 +205,7 @@ public class Main {
                         case 4: // Buscar cliente
                             System.out.println("-[Consulta]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            cpfCnpj = scs.nextLine();
+                            cpfCnpj = sc.nextLine();
                             pessoa = gp.consultarPessoas(cpfCnpj);
                             if (pessoa != null) {
                                 log = "Cliente encontrado";
@@ -228,23 +234,27 @@ public class Main {
                     System.out.println("2 - Alterar produto");
                     System.out.println("3 - Excluir produto");
                     System.out.println("4 - Buscar produto");
-                    System.out.println("0 - Relatório");
-                    opcao = scn.nextInt();
+                    System.out.println("5 - Relatório");
+                    System.out.println("0 - Sair");
+                    opcao = sc.nextInt();
+                    sc.nextLine();
                     switch (opcao) {
 
                         case 1: // Inserir produto
                             System.out.println("-[Inclusão]-");
                             System.out.println("Digite o nome do produto: ");
-                            String nome = scs.nextLine();
+                            String nome = sc.nextLine();
 
                             System.out.println("Digite a descrição do produto: ");
-                            String descricao = scs.nextLine();
+                            String descricao = sc.nextLine();
 
                             System.out.println("Digite o valor do produto: ");
-                            float valor = scn.nextFloat();
+                            float valor = sc.nextFloat();
+                            sc.nextLine();
 
                             System.out.println("Digite a quantidade do produto: ");
-                            quantidade = scn.nextInt();
+                            quantidade = sc.nextInt();
+                            sc.nextLine();
 
                             log = gpr.inserirProduto(nome, descricao, valor, quantidade);
                             if (!log.isEmpty()) {
@@ -257,7 +267,8 @@ public class Main {
                             System.out.println("-[Alteração]-");
                             System.out
                                     .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
-                            pos = scn.nextInt();
+                            pos = sc.nextInt();
+                            sc.nextLine();
 
                             produto = gpr.consultarProduto(pos);
                             if (produto == null) {
@@ -266,26 +277,30 @@ public class Main {
                                 mostrarProdutos(produto);
 
                                 System.out.println("Confirmar alteração? (1-sim / 2-não)");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
 
                                 while (resp < 0 || resp > 2) {
                                     System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                    resp = scn.nextInt();
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
                                 }
 
                                 if (resp == 1) {
 
                                     System.out.println("Digite o novo nome do produto: ");
-                                    String novoNome = scs.nextLine();
+                                    String novoNome = sc.nextLine();
 
                                     System.out.println("Digite a nova descrição do produto: ");
-                                    String novaDescricao = scs.nextLine();
+                                    String novaDescricao = sc.nextLine();
 
                                     System.out.println("Digite o novo valor do produto: ");
-                                    float novoValor = scn.nextFloat();
+                                    float novoValor = sc.nextFloat();
+                                    sc.nextLine();
 
                                     System.out.println("Digite a nova quantidade do produto: ");
-                                    float novaQuantidade = scn.nextInt();
+                                    float novaQuantidade = sc.nextInt();
+                                    sc.nextLine();
 
                                     log = gpr.alterarProduto(novoNome, novaDescricao, novoValor, novaQuantidade, pos);
                                     if (!log.isEmpty()) {
@@ -301,7 +316,8 @@ public class Main {
                             System.out.println("-[Exclusão]-");
                             System.out
                                     .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
-                            pos = scn.nextInt();
+                            pos = sc.nextInt();
+                            sc.nextLine();
 
                             produto = gpr.consultarProduto(pos);
                             if (produto == null) {
@@ -310,11 +326,14 @@ public class Main {
                             mostrarProdutos(produto);
 
                             System.out.println("Confirmar alteração? (1-sim / 2-não)");
-                            resp = scn.nextInt();
+                            resp = sc.nextInt();
+                            sc.nextLine();
 
                             while (resp < 0 || resp > 2) {
                                 System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
+
                             }
 
                             if (resp == 1) {
@@ -332,7 +351,7 @@ public class Main {
                             System.out.println("-[Consulta]-");
                             System.out
                                     .println("Digite a posição do produto: entre 0 e " + (produtos.size() - 1) + " :");
-                            pos = scn.nextInt();
+                            pos = sc.nextInt();
                             produto = gpr.consultarProduto(pos);
                             if (produto != null) {
                                 System.out.println("Produto encontrado");
@@ -364,14 +383,16 @@ public class Main {
                     System.out.println("2 - Alterar pedido");
                     System.out.println("3 - Excluir pedido");
                     System.out.println("4 - Buscar pedido");
-                    System.out.println("0 - Relatório");
-                    opcao = scn.nextInt();
+                    System.out.println("5 - Relatório");
+                    System.out.println("0 - Sair");
+                    opcao = sc.nextInt();
+                    sc.nextLine();
                     switch (opcao) {
                         case 1: // Inserir pedido
 
                             System.out.println("-[Inclusão]-");
                             System.out.println("Digite o CPF/CNPJ do cliente: ");
-                            buscarCpfCnpj = scs.nextLine();
+                            buscarCpfCnpj = sc.nextLine();
                             pessoa = gp.consultarPessoas(buscarCpfCnpj);
 
                             if (pessoa == null) {
@@ -382,11 +403,13 @@ public class Main {
                             mostrarClientes(pessoa);
 
                             System.out.println("Deseja adicionar este cliente ? (1-sim / 2-não)");
-                            resp = scn.nextInt();
+                            resp = sc.nextInt();
+                            sc.nextLine();
 
                             while (resp != 1 && resp != 2) {
                                 System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
                             }
 
                             if (resp == 1) {
@@ -398,7 +421,7 @@ public class Main {
                                     int op;
 
                                     System.out.println("Digite a posição do produto: ");
-                                    pos = scn.nextInt();
+                                    pos = sc.nextInt();
                                     produto = gpr.consultarProduto(pos);
 
                                     if (produto == null) {
@@ -409,28 +432,32 @@ public class Main {
                                     mostrarProdutos(produto);
 
                                     System.out.println("Confirmar produto? (1-sim / 2-não)");
-                                    op = scn.nextInt();
+                                    op = sc.nextInt();
+                                    sc.nextLine();
 
                                     while (op != 1 && op != 2) {
                                         System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
-                                        op = scn.nextInt();
+                                        op = sc.nextInt();
+                                        sc.nextLine();
                                     }
 
                                     System.out.println("Digite a quantidade do produto: ");
-                                    quantidade = scn.nextFloat();
+                                    quantidade = sc.nextFloat();
+                                    sc.nextLine();
 
                                     produtosDoPedido.add(produto);
                                     valorTotal += (float) (produto.getPreco() * quantidade);
 
                                     System.out.println("Deseja adicionar outro produto? (1-sim / 2-não)");
-                                    resp = scn.nextInt();
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
 
                                 } while (resp == 1);
 
                                 try {
 
                                     System.out.println("Digite a data do pedido: ");
-                                    String dataStr = scs.nextLine();
+                                    String dataStr = sc.nextLine();
                                     LocalDate data = LocalDate.parse(dataStr);
 
                                     log = gpe.inserirPedido(pessoa, produtosDoPedido, quantidade, valorTotal, data);
@@ -448,7 +475,8 @@ public class Main {
                             ArrayList<Produto> novosProdutos = new ArrayList<>();
                             System.out.println("-[Alteração]-");
                             System.out.println("Digite a posição do pedido");
-                            int posPedido = scn.nextInt();
+                            int posPedido = sc.nextInt();
+                            sc.nextLine();
 
                             pedido = gpe.consultarPedido(posPedido);
                             if (pedido == null) {
@@ -459,7 +487,8 @@ public class Main {
                             mostrarPedidos(pedido);
 
                             System.out.println("Deseja alterar esse pedido? 1 - Sim ou 2 - Não: ");
-                            resp = scn.nextInt();
+                            resp = sc.nextInt();
+                            sc.nextLine();
 
                             if (resp != 1) {
                                 return;
@@ -473,7 +502,7 @@ public class Main {
 
                             // Alterar cliente
                             System.out.println("Digite o CPF/CNPJ do novo cliente:");
-                            cpfCnpj = scs.nextLine();
+                            cpfCnpj = sc.nextLine();
                             pessoa = gp.consultarPessoas(cpfCnpj);
                             mostrarClientes(pessoa);
                             if (pessoa == null) {
@@ -484,24 +513,28 @@ public class Main {
                             // Alterar produtos
                             do {
                                 System.out.println("Digite a posição do produto:");
-                                int posProduto = scn.nextInt();
+                                int posProduto = sc.nextInt();
+                                sc.nextLine();
                                 produto = gpr.consultarProduto(posProduto);
 
                                 if (produto != null) {
                                     mostrarProdutos(produto);
 
                                     System.out.println("Deseja alterar esse produto? 1 - Sim ou 2 - Não: ");
-                                    resp = scn.nextInt();
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
 
                                     if (resp == 1) {
                                         System.out.println("Digite o novo nome do produto:");
-                                        String novoNome = scs.nextLine();
+                                        String novoNome = sc.nextLine();
                                         System.out.println("Digite o novo preço:");
-                                        float novoPreco = scn.nextFloat();
+                                        float novoPreco = sc.nextFloat();
+                                        sc.nextLine();
                                         System.out.println("Digite a nova descrição:");
-                                        String novaDescricao = scs.nextLine();
+                                        String novaDescricao = sc.nextLine();
                                         System.out.println("Digite a nova quantidade:");
-                                        float novaQuantidade = scn.nextFloat();
+                                        float novaQuantidade = sc.nextFloat();
+                                        sc.nextLine();
 
                                         Produto novoProduto = new Produto(novoNome, novoPreco, novaDescricao,
                                                 novaQuantidade);
@@ -510,12 +543,13 @@ public class Main {
                                 }
 
                                 System.out.println("Deseja alterar outro produto? 1 - Sim ou 2 - Não:");
-                                resp = scn.nextInt();
+                                resp = sc.nextInt();
+                                sc.nextLine();
                             } while (resp == 1);
 
                             // Alterar data do pedido
                             System.out.println("Digite a nova data do pedido (AAAA-MM-DD):");
-                            String novaDataStr = scs.nextLine();
+                            String novaDataStr = sc.nextLine();
                             LocalDate novaData = LocalDate.parse(novaDataStr);
 
                             // Atualizar o pedido
@@ -531,24 +565,41 @@ public class Main {
                         case 3: // Excluir pedido
                             System.out.println("-[Exclusão]-");
                             System.out.println("Digite a posição do pedido: ");
-                            pos = scn.nextInt();
+                            pos = sc.nextInt();
+                            sc.nextLine();
                             pedido = gpe.consultarPedido(pos);
                             if (pedido == null) {
                                 System.out.println("Não existem pedidos cadastrados.");
                             } else {
                                 mostrarPedidos(pedido);
-                                log = gpe.excluirPedido(pos);
-                                if (log.isEmpty()) {
-                                    System.out.println("Produto excluido com sucesso.");
-                                } else {
-                                    System.out.println("Erro: " + log);
+
+                                System.out.println("Deseja excluir esse pedido? 1 - Sim ou 2 - Não");
+                                resp = sc.nextInt();
+
+                                while (resp != 1 && resp != 2) {
+                                    System.out.println("Deseja excluir esse pedido? 1 - Sim ou 2 - Não");
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
                                 }
+
+                                if (resp == 1) {
+                                    log = gpe.excluirPedido(pos);
+                                    if (log.isEmpty()) {
+                                        System.out.println("Produto excluido com sucesso.");
+                                    } else {
+                                        System.out.println("Erro: " + log);
+                                    }
+                                } else {
+                                    System.out.println("Operação cancelada.");
+                                }
+
                             }
                             break;
                         case 4: // Buscar pedido
                             System.out.println("-[Consulta]-");
                             System.out.println("Digite a posição que deseja consultar:");
-                            pos = scn.nextInt();
+                            pos = sc.nextInt();
+                            sc.nextLine();
                             pedido = gpe.consultarPedido(pos);
                             if (pedido != null) {
                                 System.out.println("[Pedido encontrado:]");
@@ -578,23 +629,219 @@ public class Main {
                     System.out.println("2 - Alterar pagamento");
                     System.out.println("3 - Excluir pagamento");
                     System.out.println("4 - Buscar pagamento");
-                    System.out.println("0 - Relatório");
-                    opcao = scn.nextInt();
+                    System.out.println("5 - Relatório");
+                    System.out.println("0 - Sair");
+                    opcao = sc.nextInt();
+                    sc.nextLine();
                     switch (opcao) {
                         case 1: // Inserir pagamento
                             System.out.println("-[Inclusão]-");
+
+                            System.out.println("Escolha a forma de pagamento: ");
+                            System.out.println("1 - Crédito");
+                            System.out.println("2 - Débito");
+                            System.out.println("3 - À vista");
+                            int tipoPagamento = sc.nextInt();
+                            sc.nextLine();
+
+                            while (tipoPagamento != 1 && tipoPagamento != 2 && tipoPagamento != 3) {
+                                System.out.println("Escolha a forma de pagamento: ");
+                                System.out.println("1 - Crédito");
+                                System.out.println("2 - Débito");
+                                System.out.println("3 - À vista");
+                                tipoPagamento = sc.nextInt();
+                                sc.nextLine();
+                            }
+                            if (tipoPagamento == 1) {
+                                formaPagamento = "Crédito";
+                            } else if (tipoPagamento == 2) {
+                                formaPagamento = "Débito";
+                            } else if (tipoPagamento == 3) {
+                                formaPagamento = "À vista";
+                            }
+
+                            System.out.println("Digite a data do pagamento: ");
+                            String novadataPagamentoStr = sc.nextLine();
+                            LocalDate novadataPagamento = LocalDate.parse(novadataPagamentoStr);
+
+                            System.out.println("Digite a posição do pedido: ");
+                            pos = sc.nextInt();
+                            sc.nextLine();
+
+                            pedido = gpe.consultarPedido(pos);
+                            if (pedido == null) {
+                                System.out.println("Pedido não encontrado.");
+                                return;
+
+                            }
+                            mostrarPedidos(gpe.consultarPedido(pos));
+
+                            System.out.println("Desjea adicionar este pedido? (1-sim / 2-não)");
+                            resp = sc.nextInt();
+                            sc.nextLine();
+
+                            while (resp != 1 && resp != 2) {
+                                System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                resp = sc.nextInt();
+                                sc.nextLine();
+                            }
+
+                            if (resp == 1) {
+                                System.err.println("Valor do pedido: " + pedido.getValorTotal());
+                                System.out.println("Digite o valor a ser pago: ");
+                                float valorPagamento = sc.nextFloat();
+                                sc.nextLine();
+                                float troco = 0;
+                                troco = valorPagamento - pedido.getValorTotal();
+                                if (troco < 0) {
+                                    System.out.println("Valor insuficiente");
+                                } else if (troco > 0) {
+                                    System.out.println("Troco: " + troco);
+                                } else {
+
+                                    boolean status = true;
+                                    log = gpg.inserirPagamento(formaPagamento, valorPagamento, novadataPagamento,
+                                            status,
+                                            pedido, troco);
+                                    System.out.println("Pagamento realizado com sucesso.");
+                                    if (!log.isEmpty()) {
+                                        System.out.println("Erro: " + log);
+                                    }
+                                }
+                            }
+
                             break;
-                        case 2: // Alterar pagamento
+                        case 2: // TODO Alterar pagamento
                             System.out.println("-[Alteração]-");
+                            System.out.println("Digite a posição do pagamento: ");
+                            pos = sc.nextInt();
+                            sc.nextLine();
+
+                            pagamento = gpg.consultarPagamento(pos);
+                            mostrarPagamentos(gpg.consultarPagamento(pos));
+
+                            if (pagamento == null) {
+                                System.out.println("Pagamento não encontrado.");
+                            } else {
+
+                                System.out.println("Escolha a forma de pagamento: ");
+                                System.out.println("1 - Crédito");
+                                System.out.println("2 - Débito");
+                                System.out.println("3 - À vista");
+                                tipoPagamento = sc.nextInt();
+                                sc.nextLine();
+
+                                while (tipoPagamento != 1 && tipoPagamento != 2 && tipoPagamento != 3) {
+                                    System.out.println("Escolha a forma de pagamento: ");
+                                    System.out.println("1 - Crédito");
+                                    System.out.println("2 - Débito");
+                                    System.out.println("3 - À vista");
+                                    tipoPagamento = sc.nextInt();
+                                }
+                                if (tipoPagamento == 1) {
+                                    formaPagamento = "Crédito";
+                                } else if (tipoPagamento == 2) {
+                                    formaPagamento = "Débito";
+                                } else if (tipoPagamento == 3) {
+                                    formaPagamento = "À vista";
+                                }
+
+                                System.out.println("Digite a data do pagamento: ");
+                                novadataPagamentoStr = sc.nextLine();
+                                novadataPagamento = LocalDate.parse(novadataPagamentoStr);
+
+                                System.out.println("Digite a posição do pedido: ");
+                                pos = sc.nextInt();
+                                sc.nextLine();
+
+                                pedido = gpe.consultarPedido(pos);
+                                mostrarPedidos(gpe.consultarPedido(pos));
+
+                                System.out.println("Deseja realizar o pagamento desse pedido? 1 - Sim ou 2 - Não");
+                                resp = sc.nextInt();
+
+                                while (resp != 1 && resp != 2) {
+                                    System.out.println("Deseja realizar o pagamento desse pedido? 1 - Sim ou 2 - Não");
+                                    resp = sc.nextInt();
+                                    sc.nextLine();
+                                }
+
+                                if (resp == 1) {
+
+                                    Pagamento pag = pagamentos.get(pos);
+
+                                    System.out.println("Digite o valor a ser pago: ");
+                                    float valorPagamento = sc.nextFloat();
+                                    sc.nextLine();
+                                    float troco = 0;
+                                    troco = valorPagamento - pedido.getValorTotal();
+                                    if (troco < 0) {
+                                        System.out.println("Valor insuficiente");
+                                    } else if (troco > 0 || troco == 0) {
+                                        System.out.println("Troco: " + troco);
+                                        boolean status = true;
+                                        gpg.alterarPagamento(formaPagamento, valorPagamento, novadataPagamento, status,
+                                                pos, troco);
+                                    }
+                                } else {
+                                    System.out.println("Operação cancelada.");
+                                }
+
+                            }
+                            mostrarPagamentos(gpg.consultarPagamento(pos));
+
                             break;
                         case 3: // Excluir pagamento
                             System.out.println("-[Exclusão]-");
+                            System.out.println("Digite a posição do pagamento: ");
+                            pos = sc.nextInt();
+                            sc.nextLine();
+
+                            mostrarPagamentos(gpg.consultarPagamento(pos));
+
+                            System.out.println("Confirmar exclusão? (1-sim / 2-não)");
+                            resp = sc.nextInt();
+                            sc.nextLine();
+
+                            while (resp != 1 && resp != 2) {
+                                System.out.println("Opção inválida. Digite 1 para sim ou 2 para não");
+                                resp = sc.nextInt();
+                                sc.nextLine();
+                            }
+
+                            if (resp == 1) {
+                                log = gpg.excluirPagamento(pos);
+                                System.out.println("Pagamento excluído com sucesso");
+                            } else
+                                System.out.println("Operação cancelada");
+
+                            if (!log.isEmpty()) {
+                                System.out.println("Erro: " + log + "Tente novamente.");
+                            }
                             break;
                         case 4: // Buscar pagamento
                             System.out.println("-[Consultar]-");
+                            System.out.println("Digite a posição do pagamento: ");
+                            pos = sc.nextInt();
+                            sc.nextLine();
+
+                            pagamento = gpg.consultarPagamento(pos);
+                            if (pagamento != null) {
+                                System.out.println("Pagamento encontrado");
+                                mostrarPagamentos(pagamento);
+                            }
                             break;
                         case 5: // Relatório
                             System.out.println("-[Relatório]-");
+                            ArrayList<Pagamento> p = gpg.relatorio();
+                            if (!p.isEmpty()) {
+                                System.out.println("Pagamentos encontrados:");
+                                for (Pagamento pag : p) {
+                                    mostrarPagamentos(pag);
+                                }
+                            } else {
+                                System.out.println("Nenhum pagamento encontrado.");
+                            }
                             break;
                         case 0: // Sair
                             break;
@@ -610,8 +857,7 @@ public class Main {
                     break;
             }
         } while (escolha != 0);
-        scn.close();
-        scs.close();
+        sc.close();
 
     }
 
@@ -665,6 +911,21 @@ public class Main {
             total += produto.getPreco() * produto.getQuantidade();
         }
         return total;
+    }
+
+    public static void mostrarPagamentos(Pagamento pagamento) {
+        if (pagamento == null) {
+            System.out.println("Pagamento inválido.");
+            return;
+        }
+        System.out.println("\n--- Dados do Pagamento ---");
+        System.out.println("Forma de pagamento: " + pagamento.getFormaPagamento());
+        System.out.println("Valor: " + pagamento.getValor());
+        System.out.println("Data do pagamento: " + pagamento.getDataPagamento());
+        System.out.println("Status do pagamento: " + pagamento.getStatus());
+        System.out.println("-[Dados do pedido]");
+        System.out.println("Valor Total: " + pagamento.getPedido().getValorTotal());
+        System.out.println("-------------------------------------------\n");
     }
 
 }

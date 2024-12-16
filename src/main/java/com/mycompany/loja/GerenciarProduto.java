@@ -12,12 +12,19 @@ public class GerenciarProduto {
     public String inserirProduto(String nome, String descricao, float preco, float quantidade) {
         String log = "";
 
-        if (nome.isBlank() || descricao.isBlank() || preco <= 0 || quantidade <= 0) {
-            log = "Preencha todos os campos";
+        if (nome.isEmpty()) {
+            log = "Nome não ṕde ser vazio";
+        } else if (descricao.isEmpty()) {
+            log = "Descrição não pode ser vazia";
+        } else if (preco <= 0) {
+            log = "Preço não pode ser menor ou igual a zero";
+        } else if (quantidade <= 0) {
+            log = "Quantidade não pode ser menor ou igual a zero";
         } else {
             Produto produto = new Produto(nome, preco, descricao, quantidade);
             produtos.add(produto);
         }
+
         return log;
     }
 
@@ -36,10 +43,14 @@ public class GerenciarProduto {
     public String alterarProduto(String nome, String descricao, float preco, float quantidade, int pos) {
         String log = "";
         Produto produto = produtos.get(pos);
-
-        if (nome.isBlank() || descricao.isBlank() || preco <= 0 || quantidade <= 0 || pos < 0
-                || pos >= produtos.size()) {
-            log = "Preencha todos os campos";
+        if (nome.isEmpty()) {
+            log = "Nome não pode ser vazio";
+        } else if (descricao.isEmpty()) {
+            log = "Descrição não pode ser vazia";
+        } else if (preco <= 0) {
+            log = "Preço não pode ser menor ou igual a zero";
+        } else if (quantidade <= 0) {
+            log = "Quantidade não pode ser menor ou igual a zero";
         } else {
             produto.setNome(nome);
             produto.setDescricao(descricao);

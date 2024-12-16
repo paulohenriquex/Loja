@@ -55,26 +55,31 @@ public class GerenciarPedido {
             int posPedido, LocalDate novaData) {
         String log = "";
 
-        if (pessoa == null || novosProdutos == null || novosProdutos.isEmpty() || quantidade <= 0 || valorTotal <= 0
-                || novaData == null) {
-            return "Campos inválidos fornecidos.";
+        if (pessoa == null) {
+            log = "Pessoa inválida";
+        } else if (novosProdutos == null || novosProdutos.isEmpty()) {
+            log = "Produtos inválidos";
+        } else if (quantidade <= 0) {
+            log = "Quantidade inválida";
+        } else if (valorTotal <= 0) {
+            log = "Valor total inválido";
+        } else if (novaData == null) {
+            log = "Data inválida";
+        } else if (posPedido < 0 || posPedido >= pedidos.size()) {
+            log = "Pedido não encontrado";
+        } else {
+            Pedido pedido = pedidos.get(posPedido);
+            pedido.setPessoa(pessoa);
+            pedido.setProdutos(new ArrayList<>(novosProdutos));
+            pedido.setQuantidade(quantidade);
+            pedido.setValorTotal(valorTotal);
+            pedido.setData(novaData);
         }
 
         // Verificar se o índice do pedido é válido
         if (posPedido < 0 || posPedido >= pedidos.size()) {
             return "Pedido não encontrado no índice especificado.";
         }
-
-        // Obter o pedido a ser alterado
-        Pedido pedido = pedidos.get(posPedido);
-
-        // Atualizar os atributos do pedido
-        pedido.setPessoa(pessoa);
-        pedido.setProdutos(new ArrayList<>(novosProdutos)); // Substituir lista de produtos
-        pedido.setQuantidade(quantidade);
-        pedido.setValorTotal(valorTotal);
-        pedido.setData(novaData);
-
         return log;
     }
 

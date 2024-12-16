@@ -782,6 +782,7 @@ public class Main {
                                         boolean status = true;
                                         gpg.alterarPagamento(formaPagamento, valorPagamento, novadataPagamento, status,
                                                 pos, troco);
+                                        System.out.println("Pagamento realuzado com sucesso.");
                                     }
                                 } else {
                                     System.out.println("Operação cancelada.");

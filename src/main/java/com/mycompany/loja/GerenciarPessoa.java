@@ -14,24 +14,36 @@ public class GerenciarPessoa {
     public String inserirPessoa(String nome, String endereco, String telefone, String cpf,
             LocalDate dataNascimento) {
         String log = "";
-        if (nome.isBlank() || endereco.isBlank() || telefone.isBlank() || cpf.isBlank()
-                || dataNascimento == null) {
-            log = "Preencha todos os campos";
+        if (nome.isEmpty()) {
+            log = "Nome não pode ser vazio";
+        } else if (endereco.isEmpty()) {
+            log = "Endereço não pode ser vazio";
+        } else if (telefone.isEmpty()) {
+            log = "Telefone não pode ser vazio";
+        } else if (cpf.isEmpty()) {
+            log = "CPF não pode ser vazio";
+        } else if (dataNascimento == null) {
+            log = "Data de nascimento não pode ser vazia";
+        } else {
+            Pessoa pessoa = new PessoaFisica(nome, endereco, telefone, cpf, dataNascimento);
+            pessoas.add(pessoa);
         }
-        Pessoa pessoa = new PessoaFisica(nome, endereco, telefone, cpf, dataNascimento);
-        pessoas.add(pessoa);
-
         return log;
     }
 
     public String inserirPessoaJuridica(String nome, String endereco, String telefone, String cnpj,
             String razaoSocial) {
         String log = "";
-        if (pessoas.isEmpty()) {
-            log = "Lista de pessoas vazia";
-        } else if (nome.isBlank() || endereco.isBlank() || telefone.isBlank() || cnpj.isBlank()
-                || razaoSocial.isBlank()) {
-            log = "Preencha todos os campos";
+        if (nome.isEmpty()) {
+            log = "Nome não pode ser vazio";
+        } else if (endereco.isEmpty()) {
+            log = "Endereço não pode ser vazio";
+        } else if (telefone.isEmpty()) {
+            log = "Telefone não pode ser vazio";
+        } else if (cnpj.isEmpty()) {
+            log = "CNPJ não pode ser vazio";
+        } else if (razaoSocial.isEmpty()) {
+            log = "Razão social não pode ser vazia";
         } else {
             Pessoa pessoa = new PessoaJuridica(nome, endereco, telefone, cnpj, razaoSocial);
             pessoas.add(pessoa);
@@ -41,17 +53,23 @@ public class GerenciarPessoa {
 
     public Pessoa consultarPessoas(String cpfcnpj) {
         for (Pessoa p : pessoas) {
+
             if (p instanceof PessoaFisica pf && cpfcnpj.equals(pf.getCpf())) {
                 return pf;
             } else if (p instanceof PessoaJuridica pj && cpfcnpj.equals(pj.getCnpj())) {
                 return pj;
             }
         }
-        return null;    
+        return null;
     }
 
     public String excluirPessoa(String cpfcnpj) {
         String log = "";
+
+        if (cpfcnpj.isBlank()) {
+            log = "Preencha o campo";
+        }
+
         for (int i = 0; i < pessoas.size(); i++) {
             Pessoa p = pessoas.get(i);
             if (p instanceof PessoaFisica pf && cpfcnpj.equals(pf.getCpf())) {
@@ -65,19 +83,30 @@ public class GerenciarPessoa {
         return log;
     }
 
-    public String alterarPessoaFisica(String buscarCpfCnpj,String cpfCnpj, String nome, String endereco, String telefone,
+    public String alterarPessoaFisica(String buscarCpfCnpj, String cpfCnpj, String nome, String endereco,
+            String telefone,
             LocalDate dataNascimento) {
         String log = "";
         boolean achou = false;
 
-        if (cpfCnpj.isBlank() || nome.isBlank() || endereco.isBlank() || telefone.isBlank() || dataNascimento == null) {
-            log = "Preencha todos os campos";
+        if (buscarCpfCnpj.isBlank()) {
+            log = "Preencha o campo";
+        } else if (cpfCnpj.isEmpty()) {
+
+        } else if (nome.isEmpty()) {
+            log = "Nome não pode ser vazio";
+        } else if (endereco.isEmpty()) {
+            log = "Endereço não pode ser vazio";
+        } else if (telefone.isEmpty()) {
+            log = "Telefone não pode ser vazio";
+        } else if (dataNascimento == null) {
+            log = "Data de nascimento não pode ser vazia";
         }
 
         for (Pessoa p : pessoas) {
             if (p instanceof PessoaFisica) {
                 PessoaFisica pf = (PessoaFisica) p;
-                if(buscarCpfCnpj.equals(pf.getCpf())){
+                if (buscarCpfCnpj.equals(pf.getCpf())) {
                     pf.setNome(nome);
                     pf.setEndereco(endereco);
                     pf.setTelefone(telefone);
@@ -94,7 +123,8 @@ public class GerenciarPessoa {
         return log;
     }
 
-    public String alterarPessoaJuridica(String buscarCpfCnpj,String nome, String endereco, String telefone, String cpfCnpj,
+    public String alterarPessoaJuridica(String buscarCpfCnpj, String nome, String endereco, String telefone,
+            String cpfCnpj,
             String razaoSocial) {
         String log = "";
 

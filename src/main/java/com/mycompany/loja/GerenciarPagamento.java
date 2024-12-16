@@ -48,14 +48,14 @@ public class GerenciarPagamento {
             log = "Posição inválida\n";
         } else if (troco < 0) {
             log = "Troco não pode ser negativo\n";
+        } else {
+            Pagamento pagamento = pagamentos.get(posPagamento);
+            pagamento.setFormaPagamento(novaFormaDePagamento);
+            pagamento.setValor(novoValorTotal);
+            pagamento.setDataPagamento(novaDataDePagamento);
+            pagamento.setStatus(novoStatus);
+            pagamento.setTroco(troco);
         }
-
-        Pagamento pagamento = pagamentos.get(posPagamento);
-        pagamento.setFormaPagamento(novaFormaDePagamento);
-        pagamento.setValor(novoValorTotal);
-        pagamento.setDataPagamento(novaDataDePagamento);
-        pagamento.setStatus(novoStatus);
-        pagamento.setTroco(troco);
 
         return log;
     }
